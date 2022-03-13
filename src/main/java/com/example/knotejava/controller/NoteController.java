@@ -2,13 +2,15 @@ package com.example.knotejava.controller;
 
 
 import com.example.knotejava.service.NoteService;
-import java.io.IOException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 @Controller
@@ -29,7 +31,7 @@ public class NoteController {
                             @RequestParam String description,
                             @RequestParam(required = false) String publish,
                             @RequestParam(required = false) String upload,
-                            Model model) throws IOException {
+                            Model model) throws Exception {
 
         if (publish != null && publish.equals("Publish")) {
             noteService.saveNote(description, model);
@@ -43,5 +45,11 @@ public class NoteController {
         }
         // After save fetch all notes again
         return INDEX_PAGE_URL;
+    }
+
+    @GetMapping(value = "/img/{name}", produces = MediaType.IMAGE_PNG_VALUE)
+    @ResponseBody
+    public byte[] getImageByName(@PathVariable String name) throws Exception {
+        return noteService.getImageByName(name);
     }
 }
