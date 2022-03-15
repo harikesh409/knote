@@ -17,6 +17,16 @@ spec:
           image: local/knote-java:2.0.0
           ports:
             - containerPort: 8080
+          livenessProbe:
+            httpGet:
+              port: 8080
+              path: /actuator/health/liveness
+            initialDelaySeconds: 5
+          readinessProbe:
+            httpGet:
+              port: 8080
+              path: /actuator/health/readiness
+            initialDelaySeconds: 5
           env:
             - name: MONGO_URL
               value: mongodb://mongo:27017/dev
